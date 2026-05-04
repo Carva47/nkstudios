@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="pt-AO" data-tema="escuro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Nkela Studios · Painel Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+:root,[data-tema="escuro"]{
+  --fundo:#0D0804;--sup:#141008;--painel:#1C140A;--elevado:#261A0E;
+  --marca:#C8651A;--marca2:#E07A30;--marca-dim:rgba(200,101,26,.12);
+  --texto:#F5E6D3;--suave:#D4B99A;--muted:#7A6050;
+  --borda:rgba(200,101,26,.22);--borda2:rgba(255,255,255,.07);
+  --verde:#3d8c5e;--vermelho:#b94040;
+  --fh:'Cormorant Garamond',serif;--fb:'Raleway',sans-serif;
+}
+[data-tema="claro"]{
+  --fundo:#FAF4EE;--sup:#F2E8DA;--painel:#EAD8C4;--elevado:#E0CAB0;
+  --marca:#B85A14;--marca2:#D06E28;--marca-dim:rgba(184,90,20,.1);
+  --texto:#1A0E06;--suave:#3D2010;--muted:#7A5A3A;
+  --borda:rgba(184,90,20,.25);--borda2:rgba(0,0,0,.1);
+}
+body{background:var(--fundo);color:var(--texto);font-family:var(--fb);font-weight:300;min-height:100vh;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;transition:background .3s,color .3s;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:rgba(200,101,26,.3);border-radius:2px;}
+
+/* ── TOPBAR ── */
+.topbar{height:54px;background:var(--sup);border-bottom:1px solid var(--borda2);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;flex-shrink:0;position:sticky;top:0;z-index:100;}
+.tb-logo{font-family:var(--fh);font-size:1.3rem;letter-spacing:3px;color:var(--texto);}
+.tb-logo em{color:var(--marca);font-style:normal;}
+.tb-esq{display:flex;align-items:center;gap:1rem;}
+.tb-div{width:1px;height:18px;background:var(--borda2);}
+.tb-sec{font-size:.66rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.tb-dir{display:flex;align-items:center;gap:.7rem;}
+.tb-notif{background:none;border:none;cursor:pointer;color:var(--muted);position:relative;padding:.3rem;transition:color .25s;}
+.tb-notif:hover{color:var(--marca);}
+.notif-pt{position:absolute;top:0;right:0;width:8px;height:8px;background:var(--marca);border-radius:50%;border:2px solid var(--sup);display:none;}
+.tema-btn{width:34px;height:34px;background:var(--marca-dim);border:1px solid var(--borda);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--marca);cursor:pointer;transition:all .25s;}
+.tema-btn:hover{background:var(--marca);color:#fff;}
+.icone-sol{display:none;}[data-tema="claro"] .icone-sol{display:block;}[data-tema="claro"] .icone-lua{display:none;}
+.btn-sm{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .9rem;font-size:.65rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;border-radius:2px;cursor:pointer;transition:all .22s;border:none;font-family:var(--fb);}
+.btn-sm-f{background:transparent;border:1px solid var(--borda2);color:var(--muted);}
+.btn-sm-f:hover{border-color:var(--marca);color:var(--marca);}
+.btn-sm-p{background:var(--marca);color:#fff;}
+.btn-sm-p:hover{background:var(--marca2);}
+.btn-sm-d{background:transparent;border:1px solid rgba(185,64,64,.3);color:#c07070;}
+.btn-sm-d:hover{background:rgba(185,64,64,.1);}
+
+/* ── LAYOUT ── */
+.layout{display:flex;flex:1;min-height:0;overflow:hidden;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:220px;background:var(--sup);border-right:1px solid var(--borda2);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
+.sb-sec{font-size:.58rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);padding:.5rem 1.2rem;margin-top:.8rem;}
+.sb-item{display:flex;align-items:center;gap:.75rem;padding:.68rem 1.2rem;font-size:.78rem;color:var(--muted);cursor:pointer;transition:all .2s;border-left:2px solid transparent;margin:1px .5rem;border-radius:0 2px 2px 0;}
+.sb-item:hover{color:var(--texto);background:rgba(200,101,26,.06);}
+.sb-item.ativo{color:var(--marca);background:var(--marca-dim);border-left-color:var(--marca);}
+.sb-item svg{flex-shrink:0;width:14px;height:14px;}
+.sb-badge{margin-left:auto;background:var(--vermelho);color:#fff;font-size:.58rem;font-weight:700;padding:.1rem .42rem;border-radius:10px;min-width:18px;text-align:center;display:none;}
+.sb-badge-n{background:var(--muted);display:inline-block;}
+.sb-rodape{margin-top:auto;padding:1rem;border-top:1px solid var(--borda2);}
+.sb-user{display:flex;align-items:center;gap:.7rem;padding:.5rem .7rem;}
+.sb-av{width:30px;height:30px;border-radius:50%;background:var(--marca-dim);border:1px solid var(--borda);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:.85rem;color:var(--marca);}
+.sb-nome{font-size:.76rem;color:var(--texto);}
+.sb-cargo{font-size:.63rem;color:var(--muted);}
+
+/* ── CONTEÚDO PRINCIPAL ── */
+.principal{flex:1;overflow-y:auto;padding:2rem 2.5rem;}
+.painel{display:none;}
+.painel.ativo{display:block;}
+.p-titulo{font-family:var(--fh);font-size:1.9rem;font-weight:300;color:var(--texto);}
+.p-titulo em{color:var(--marca);font-style:italic;}
+.p-sub{font-size:.8rem;color:var(--muted);margin-top:.3rem;margin-bottom:2rem;line-height:1.6;}
+.subtit{font-family:var(--fh);font-size:1.1rem;font-weight:300;color:var(--texto);margin:1.8rem 0 .8rem;}
+.badge-cont{font-size:.7rem;color:var(--muted);margin-left:.5rem;}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+.stat{background:var(--painel);border:1px solid var(--borda2);padding:1.2rem 1.5rem;border-radius:2px;transition:border-color .2s;}
+.stat:hover{border-color:var(--borda);}
+.stat-v{font-family:var(--fh);font-size:2rem;font-weight:300;color:var(--marca);line-height:1;}
+.stat-l{font-size:.63rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:.4rem;}
+
+/* Card de formulário */
+.fc{background:var(--painel);border:1px solid var(--borda2);border-radius:2px;padding:1.8rem 2rem;margin-bottom:1.5rem;}
+.fc-sec{font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--marca);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--borda);}
+.linha{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.campo{margin-bottom:1rem;}
+.campo label{display:block;font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
+.campo input,.campo select,.campo textarea{width:100%;background:rgba(200,101,26,.04);border:1px solid var(--borda2);color:var(--texto);padding:.68rem .92rem;font-family:var(--fb);font-size:.84rem;font-weight:300;outline:none;transition:all .25s;border-radius:2px;-webkit-appearance:none;}
+.campo input:focus,.campo select:focus,.campo textarea:focus{border-color:var(--marca);background:rgba(200,101,26,.07);}
+.campo select option{background:var(--painel);}
+.campo textarea{resize:vertical;min-height:85px;line-height:1.7;}
+.campo-dica{font-size:.68rem;color:var(--muted);margin-top:.3rem;line-height:1.6;}
+.ck{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;}
+.ck input[type=checkbox]{accent-color:var(--marca);width:15px;height:15px;cursor:pointer;}
+.ck label{font-size:.8rem;color:var(--muted);cursor:pointer;}
+
+/* Botões grandes */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;padding:.65rem 1.4rem;font-family:var(--fb);font-size:.7rem;font-weight:500;letter-spacing:2px;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer;transition:all .22s;white-space:nowrap;}
+.btn-p{background:var(--marca);color:#fff;}
+.btn-p:hover{background:var(--marca2);}
+.btn-s{background:transparent;border:1px solid var(--marca);color:var(--marca);}
+.btn-s:hover{background:var(--marca-dim);}
+.btn-f{background:transparent;border:1px solid var(--borda2);color:var(--muted);}
+.btn-f:hover{border-color:var(--marca);color:var(--marca);}
+.btn-d{background:transparent;border:1px solid rgba(185,64,64,.3);color:#c07070;}
+.btn-d:hover{background:rgba(185,64,64,.1);}
+.btn-lg{padding:.88rem 2rem;font-size:.75rem;}
+.acoes{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:.8rem;}
+
+/* Feedback */
+.fb{padding:.62rem 1rem;font-size:.77rem;border-radius:2px;display:none;margin:.5rem 0;line-height:1.5;}
+.fb.vis{display:block;}
+.fb.ok{background:rgba(61,140,94,.12);border:1px solid rgba(61,140,94,.3);color:#5bbf88;}
+.fb.err{background:rgba(185,64,64,.1);border:1px solid rgba(185,64,64,.3);color:#e08080;}
+
+/* Upload de fotos */
+.upload-area{border:2px dashed var(--borda);border-radius:2px;padding:2.5rem;text-align:center;cursor:pointer;transition:all .25s;position:relative;background:rgba(200,101,26,.03);}
+.upload-area:hover,.upload-area.drag{border-color:var(--marca);background:var(--marca-dim);}
+.upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-icon{color:var(--marca);margin:0 auto .8rem;}
+.upload-txt{font-size:.85rem;color:var(--texto);margin-bottom:.3rem;}
+.upload-sub{font-size:.75rem;color:var(--muted);}
+
+/* Preview de fotos carregadas */
+.fotos-preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:.6rem;margin-top:1rem;}
+.foto-prev{position:relative;aspect-ratio:1;border-radius:2px;overflow:hidden;background:var(--elevado);}
+.foto-prev img{width:100%;height:100%;object-fit:cover;display:block;}
+.foto-prev-del{position:absolute;top:3px;right:3px;width:22px;height:22px;background:rgba(0,0,0,.7);border:none;color:#fff;cursor:pointer;border-radius:50%;font-size:.75rem;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.foto-prev-del:hover{background:var(--vermelho);}
+.foto-prev-num{position:absolute;bottom:3px;left:4px;font-size:.58rem;color:rgba(255,255,255,.7);background:rgba(0,0,0,.5);padding:1px 4px;border-radius:1px;}
+
+/* Barra de progresso de upload */
+.progress-wrap{display:none;margin-top:.8rem;}
+.progress-wrap.vis{display:block;}
+.progress-bar{height:4px;background:var(--borda2);border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--marca);border-radius:2px;transition:width .3s;}
+.progress-txt{font-size:.73rem;color:var(--muted);margin-top:.4rem;text-align:center;}
+
+/* Info box */
+.info-box{background:rgba(200,101,26,.06);border:1px solid var(--borda);border-radius:2px;padding:1rem 1.2rem;font-size:.77rem;color:var(--muted);line-height:1.8;margin-top:1rem;}
+.info-box strong{color:var(--texto);}
+.info-box code{color:var(--marca);background:rgba(200,101,26,.1);padding:.1rem .32rem;border-radius:2px;font-size:.73rem;}
+
+/* Resultado de criação de galeria */
+.resultado{display:none;margin-top:1.5rem;background:rgba(61,140,94,.08);border:1px solid rgba(61,140,94,.3);border-radius:2px;padding:1.5rem 2rem;}
+.res-top{font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:#5bbf88;margin-bottom:.8rem;}
+.res-nome{font-family:var(--fh);font-size:1.1rem;color:var(--texto);margin-bottom:1rem;}
+.res-link-wrap{display:grid;grid-template-columns:1fr auto;gap:.8rem;align-items:center;margin-bottom:.6rem;}
+.res-link-lbl{font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem;}
+.res-link-val{font-size:.76rem;color:var(--texto);background:rgba(255,255,255,.05);padding:.5rem .8rem;border-radius:2px;word-break:break-all;}
+.res-meta{display:flex;gap:1.5rem;font-size:.74rem;color:var(--muted);flex-wrap:wrap;}
+.res-acoes{margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap;}
+
+/* Listas de galerias e selecções */
+.gal-lista,.sel-lista,.item-lista{display:flex;flex-direction:column;gap:.7rem;}
+.gal-card{background:var(--painel);border:1px solid var(--borda2);border-radius:2px;padding:1.2rem 1.5rem;display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:center;transition:border-color .2s;}
+.gal-card:hover{border-color:var(--borda);}
+.gal-nome{font-family:var(--fh);font-size:1.12rem;font-weight:300;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-bottom:.25rem;color:var(--texto);}
+.gal-info{font-size:.72rem;color:var(--muted);display:flex;gap:1rem;flex-wrap:wrap;margin-top:.35rem;}
+.gal-acoes{display:flex;gap:.45rem;flex-wrap:wrap;justify-content:flex-end;align-items:center;}
+
+/* Link copiável */
+.link-box{background:rgba(255,255,255,.03);border:1px solid var(--borda2);border-radius:2px;padding:.45rem .82rem;display:inline-flex;align-items:center;gap:.55rem;font-size:.67rem;color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap;}
+.link-box:hover{border-color:var(--marca);color:var(--marca);}
+.link-box.copiado{border-color:var(--verde);color:#5bbf88;}
+
+/* Selecções */
+.sel-card{background:var(--painel);border:1px solid var(--borda2);border-radius:2px;overflow:hidden;transition:border-color .2s;}
+.sel-card.nova{border-color:rgba(200,101,26,.35);}
+.sel-head{padding:1rem 1.5rem;border-bottom:1px solid var(--borda2);display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+.sel-cliente{font-size:.87rem;font-weight:400;color:var(--texto);}
+.sel-info{font-size:.72rem;color:var(--muted);margin-top:.15rem;}
+.sel-fotos-row{padding:.8rem 1.5rem;display:flex;gap:5px;flex-wrap:wrap;}
+.sel-mini{width:56px;height:56px;border-radius:2px;overflow:hidden;flex-shrink:0;background:var(--elevado);position:relative;}
+.sel-mini-bg{width:100%;height:100%;background-size:cover;background-position:center;}
+.sel-mini-n{position:absolute;bottom:2px;right:3px;font-size:.52rem;color:rgba(255,255,255,.7);font-weight:600;background:rgba(0,0,0,.5);padding:1px 3px;}
+.sel-mais{width:56px;height:56px;background:var(--elevado);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:.67rem;color:var(--muted);}
+.sel-foot{padding:.8rem 1.5rem;border-top:1px solid var(--borda2);display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;}
+.sel-nums{font-size:.68rem;color:var(--muted);margin-left:auto;}
+.ponto-n{width:7px;height:7px;border-radius:50%;background:var(--marca);display:inline-block;margin-right:.4rem;flex-shrink:0;}
+
+/* Items portfolio/pacotes */
+.item-row{display:flex;align-items:center;gap:.8rem;padding:.68rem 1rem;background:var(--painel);border:1px solid var(--borda2);border-radius:2px;}
+.item-thumb{width:50px;height:40px;flex-shrink:0;background:rgba(200,101,26,.08);display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:2px;}
+.item-thumb img{width:100%;height:100%;object-fit:cover;}
+.item-info{flex:1;min-width:0;}
+.item-nome{font-size:.82rem;color:var(--texto);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.item-meta{font-size:.7rem;color:var(--muted);margin-top:.15rem;}
+.item-del{background:none;border:1px solid rgba(185,64,64,.22);color:rgba(192,112,112,.5);width:28px;height:28px;cursor:pointer;font-size:.85rem;transition:all .25s;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:2px;}
+.item-del:hover{border-color:rgba(185,64,64,.6);color:#e08080;}
+.item-star{background:none;border:1px solid var(--borda2);color:var(--muted);width:28px;height:28px;cursor:pointer;transition:all .25s;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.82rem;border-radius:2px;}
+.item-star.on{border-color:var(--marca);color:var(--marca);}
+
+/* Chips */
+.chip{display:inline-flex;align-items:center;padding:.18rem .62rem;font-size:.59rem;letter-spacing:1.5px;text-transform:uppercase;border-radius:1px;}
+.chip-o{background:var(--marca-dim);color:var(--marca);border:1px solid var(--borda);}
+.chip-g{background:rgba(61,140,94,.1);color:#5bbf88;border:1px solid rgba(61,140,94,.25);}
+.chip-r{background:rgba(185,64,64,.1);color:#e08080;border:1px solid rgba(185,64,64,.25);}
+.chip-m{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid var(--borda2);}
+
+/* Estado vazio */
+.vazio{text-align:center;padding:3.5rem 2rem;color:var(--muted);}
+.vazio svg{opacity:.15;margin:0 auto 1rem;display:block;}
+.vazio h3{font-family:var(--fh);font-size:1.2rem;font-weight:300;color:var(--texto);margin-bottom:.5rem;}
+.vazio p{font-size:.82rem;line-height:1.7;}
+.vazio .lk{color:var(--marca);cursor:pointer;}
+
+/* Responsivo */
+@media(max-width:900px){.stats{grid-template-columns:1fr 1fr;}.sidebar{width:185px;}.principal{padding:1.5rem;}}
+@media(max-width:640px){.sidebar{display:none;}.stats{grid-template-columns:1fr 1fr;}.linha{grid-template-columns:1fr;}.gal-card{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- ══════════ TOPBAR ══════════ -->
+<header class="topbar">
+  <div class="tb-esq">
+    <div class="tb-logo"><em>N</em>kela</div>
+    <div class="tb-div"></div>
+    <div class="tb-sec" id="tbSec">Dashboard</div>
+  </div>
+  <div class="tb-dir">
+    <button class="tb-notif" onclick="abrirPainel('seleccoes')" title="Selecções pendentes">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2a5 5 0 015 5c0 3 1.5 4 2 5H2c.5-1 2-2 2-5a5 5 0 015-5z" stroke="currentColor" stroke-width="1.2"/><path d="M7 15a2 2 0 004 0" stroke="currentColor" stroke-width="1.2"/></svg>
+      <span class="notif-pt" id="notifPt"></span>
+    </button>
+    <button class="tema-btn" onclick="alternarTema()" aria-label="Alternar modo">
+      <svg class="icone-lua" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11.5 8.5A5 5 0 015.5 2.5a5.5 5.5 0 100 9.5 5 5 0 006-3.5z" stroke="currentColor" stroke-width="1.3"/></svg>
+      <svg class="icone-sol" width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M7 1v1.5M7 11.5V13M1 7h1.5M11.5 7H13M2.6 2.6l1.1 1.1M10.3 10.3l1.1 1.1M2.6 11.4l1.1-1.1M10.3 3.7l1.1-1.1" stroke="currentColor" stroke-width="1.3"/></svg>
+    </button>
+    <button class="btn-sm btn-sm-f" onclick="sair()">Sair</button>
+  </div>
+</header>
+
+<!-- ══════════ LAYOUT ══════════ -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sb-sec">Principal</div>
+    <div class="sb-item ativo" data-p="dashboard"    onclick="abrirPainel('dashboard')">   <svg viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx=".5" stroke="currentColor" stroke-width="1"/><rect x="8" y="1" width="5" height="5" rx=".5" stroke="currentColor" stroke-width="1"/><rect x="1" y="8" width="5" height="5" rx=".5" stroke="currentColor" stroke-width="1"/><rect x="8" y="8" width="5" height="5" rx=".5" stroke="currentColor" stroke-width="1"/></svg>Dashboard</div>
+
+    <div class="sb-sec">Site Principal</div>
+    <div class="sb-item" data-p="hero"               onclick="abrirPainel('hero')">        <svg viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="10" rx=".8" stroke="currentColor" stroke-width="1"/><path d="M1 9l3-3.5 3 3.5 2.5-3L13 12" stroke="currentColor" stroke-width="1"/></svg>Foto Hero</div>
+    <div class="sb-item" data-p="portfolio"          onclick="abrirPainel('portfolio')">   <svg viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="10" rx=".8" stroke="currentColor" stroke-width="1"/><circle cx="5" cy="7" r="1.5" stroke="currentColor" stroke-width=".9"/><path d="M1 10.5l3-3 2.5 2.5 2-2 5 5" stroke="currentColor" stroke-width="1"/></svg>Portfolio <span class="sb-badge sb-badge-n" id="sbPort"></span></div>
+    <div class="sb-item" data-p="pacotes"            onclick="abrirPainel('pacotes')">     <svg viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx=".8" stroke="currentColor" stroke-width="1"/><path d="M4 5h6M4 7.5h6M4 10h4" stroke="currentColor" stroke-width="1"/></svg>Pacotes <span class="sb-badge sb-badge-n" id="sbPack"></span></div>
+
+    <div class="sb-sec">Galerias Clientes</div>
+    <div class="sb-item" data-p="novaGaleria"        onclick="abrirPainel('novaGaleria')"> <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1"/><path d="M7 4.5v5M4.5 7h5" stroke="currentColor" stroke-width="1"/></svg>Nova Galeria</div>
+    <div class="sb-item" data-p="galerias"           onclick="abrirPainel('galerias')">    <svg viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="10" rx=".8" stroke="currentColor" stroke-width="1"/><path d="M1 6h12" stroke="currentColor" stroke-width="1"/></svg>Todas as Galerias <span class="sb-badge sb-badge-n" id="sbGal"></span></div>
+    <div class="sb-item" data-p="seleccoes"          onclick="abrirPainel('seleccoes')">   <svg viewBox="0 0 14 14" fill="none"><path d="M2 7.5l3 3L12 3" stroke="currentColor" stroke-width="1.2"/></svg>Selecções <span class="sb-badge" id="sbSel"></span></div>
+
+    <div class="sb-sec">Sistema</div>
+    <div class="sb-item" data-p="config"             onclick="abrirPainel('config')">      <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2.5" stroke="currentColor" stroke-width="1"/><path d="M7 1v1.5M7 11.5V13M1 7h1.5M11.5 7H13M2.6 2.6l1.1 1.1M10.3 10.3l1.1 1.1M2.6 11.4l1.1-1.1M10.3 3.7l1.1-1.1" stroke="currentColor" stroke-width="1"/></svg>Configurações</div>
+
+    <div class="sb-rodape">
+      <div class="sb-user">
+        <div class="sb-av">N</div>
+        <div><div class="sb-nome">Nkela Studios</div><div class="sb-cargo">Administrador</div></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTEÚDO -->
+  <main class="principal">
+
+    <!-- ══ DASHBOARD ══ -->
+    <section class="painel ativo" id="painel-dashboard">
+      <div class="p-titulo">Visão <em>Geral</em></div>
+      <div class="p-sub">Resumo da actividade da plataforma Nkela Studios.</div>
+      <div class="stats" id="statsGrid"></div>
+      <div class="subtit">Selecções Recentes</div>
+      <div id="dashRecent"></div>
+    </section>
+
+    <!-- ══ HERO ══ -->
+    <section class="painel" id="painel-hero">
+      <div class="p-titulo">Foto do <em>Hero</em></div>
+      <div class="p-sub">Define a imagem de fundo da secção principal do site.</div>
+      <div class="fc">
+        <div class="fc-sec">Carregar Imagem do Hero</div>
+        <!-- Upload do PC -->
+        <div class="upload-area" id="heroUploadArea">
+          <input type="file" id="heroFile" accept="image/jpeg,image/png,image/webp" onchange="carregarHeroPC(this)">
+          <div class="upload-icon">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="3" y="3" width="30" height="30" rx="3" stroke="#C8651A" stroke-width="1.2"/><path d="M18 24V12M12 18l6-6 6 6" stroke="#C8651A" stroke-width="1.2"/></svg>
+          </div>
+          <div class="upload-txt">Clique para seleccionar ou arraste a foto aqui</div>
+          <div class="upload-sub">JPG, PNG ou WebP · Máx. 5 MB</div>
+        </div>
+        <!-- Pré-visualização -->
+        <img id="heroPrev" src="" alt="Pré-visualização" style="max-height:200px;width:auto;border:1px solid var(--borda);border-radius:2px;margin-top:1rem;display:none;">
+        <div class="campo" style="margin-top:1rem;">
+          <label>Ou cole um URL de imagem</label>
+          <input type="url" id="heroUrl" placeholder="https://..." oninput="prevHeroUrl()">
+          <div class="campo-dica">Alternativa ao upload — use Google Drive, Dropbox, etc.</div>
+        </div>
+        <div class="fb" id="heroFb"></div>
+        <div class="acoes">
+          <button class="btn btn-p" onclick="guardarHero()">Aplicar ao Site</button>
+          <button class="btn btn-f" onclick="limparHero()">Remover Foto</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ PORTFOLIO ══ -->
+    <section class="painel" id="painel-portfolio">
+      <div class="p-titulo">Portfolio <em>do Site</em></div>
+      <div class="p-sub">Adicione fotos e vídeos que aparecem na grelha do portfolio da página principal.</div>
+      <div class="fc">
+        <div class="fc-sec">Adicionar Fotos (do computador)</div>
+        <!-- Upload múltiplo do PC -->
+        <div class="upload-area" id="portUploadArea">
+          <input type="file" id="portFiles" accept="image/jpeg,image/png,image/webp" multiple onchange="carregarFotosPC(this)">
+          <div class="upload-icon">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="3" y="3" width="30" height="30" rx="3" stroke="#C8651A" stroke-width="1.2"/><path d="M18 24V12M12 18l6-6 6 6" stroke="#C8651A" stroke-width="1.2"/><path d="M8 28h20" stroke="#C8651A" stroke-width="1.2"/></svg>
+          </div>
+          <div class="upload-txt">Clique ou arraste fotos aqui (pode seleccionar várias)</div>
+          <div class="upload-sub">JPG, PNG, WebP · Máx. 5 MB por foto</div>
+        </div>
+        <div class="fotos-preview" id="portPreviewGrid"></div>
+        <div class="progress-wrap" id="portProgress">
+          <div class="progress-bar"><div class="progress-fill" id="portProgressFill" style="width:0%"></div></div>
+          <div class="progress-txt" id="portProgressTxt">A processar...</div>
+        </div>
+
+        <div style="margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--borda2);">
+          <div class="fc-sec">Informações do Item</div>
+          <div class="linha">
+            <div class="campo"><label>Título</label><input type="text" id="pTit" placeholder="Ex: Cerimónia ao Pôr do Sol"></div>
+            <div class="campo"><label>Categoria</label>
+              <select id="pCat">
+                <option value="casamentos">Casamentos</option>
+                <option value="corporativo">Corporativo</option>
+                <option value="retratos">Retratos</option>
+                <option value="eventos">Eventos</option>
+              </select>
+            </div>
+          </div>
+          <div class="campo">
+            <label>Ou adicionar Vídeo (URL YouTube/Vimeo)</label>
+            <input type="url" id="pVideoUrl" placeholder="https://youtu.be/... ou https://vimeo.com/...">
+            <div class="campo-dica">Deixe vazio se estiver a adicionar foto do computador acima.</div>
+          </div>
+        </div>
+        <div class="fb" id="portFb"></div>
+        <button class="btn btn-p" onclick="adicionarPortfolio()">Adicionar ao Portfolio</button>
+      </div>
+
+      <div class="subtit">Items Actuais <span class="badge-cont" id="portCont"></span></div>
+      <div class="item-lista" id="portLista"></div>
+    </section>
+
+    <!-- ══ PACOTES ══ -->
+    <section class="painel" id="painel-pacotes">
+      <div class="p-titulo">Pacotes de <em>Serviços</em></div>
+      <div class="p-sub">Crie e gira os pacotes que aparecem na secção Serviços do site.</div>
+      <div class="fc">
+        <div class="fc-sec">Adicionar Pacote</div>
+        <div class="linha">
+          <div class="campo"><label>Nome do Pacote *</label><input type="text" id="pkNome" placeholder="Ex: Pacote Ouro"></div>
+          <div class="campo"><label>Preço *</label><input type="text" id="pkPreco" placeholder="Ex: Kz 120.000"></div>
+        </div>
+        <div class="linha">
+          <div class="campo"><label>Descrição</label><input type="text" id="pkDesc" placeholder="Breve descrição do pacote..."></div>
+          <div class="campo"><label>Período</label><input type="text" id="pkPer" placeholder="/ evento   ou   / sessão"></div>
+        </div>
+        <div class="campo">
+          <label>Características (uma por linha)</label>
+          <textarea id="pkItens" rows="5" placeholder="Cobertura de 8 horas&#10;200 fotos editadas&#10;2 fotógrafos&#10;Álbum físico incluído&#10;Entrega em 21 dias"></textarea>
+        </div>
+        <div class="ck"><input type="checkbox" id="pkStar"><label for="pkStar">Marcar como "Mais Popular"</label></div>
+        <div class="fb" id="pkFb"></div>
+        <button class="btn btn-p" onclick="adicionarPacote()">Adicionar Pacote</button>
+      </div>
+      <div class="subtit">Pacotes Actuais <span class="badge-cont" id="pkCont"></span></div>
+      <div class="item-lista" id="pkLista"></div>
+    </section>
+
+    <!-- ══ NOVA GALERIA ══ -->
+    <section class="painel" id="painel-novaGaleria">
+      <div class="p-titulo">Nova <em>Galeria</em></div>
+      <div class="p-sub">Crie uma galeria privada para o cliente — com upload de fotos directamente do computador.</div>
+
+      <div class="fc">
+        <div class="fc-sec">Dados do Evento</div>
+        <div class="linha">
+          <div class="campo"><label>Nome do Evento *</label><input type="text" id="gNome" placeholder="Ex: Casamento João & Maria — Junho 2025"></div>
+          <div class="campo"><label>Data do Evento</label><input type="date" id="gData"></div>
+        </div>
+        <div class="linha">
+          <div class="campo"><label>Nome do Cliente *</label><input type="text" id="gCliente" placeholder="Ex: João & Maria Silva"></div>
+          <div class="campo"><label>Email do Cliente</label><input type="email" id="gEmail" placeholder="cliente@email.com"></div>
+        </div>
+        <div class="campo"><label>Instrução para o Cliente</label><input type="text" id="gDesc" placeholder="Seleccione as fotos que gostaria de receber editadas."></div>
+      </div>
+
+      <div class="fc">
+        <div class="fc-sec">Segurança e Acesso</div>
+        <div class="linha">
+          <div class="campo">
+            <label>Senha de Acesso do Cliente *</label>
+            <input type="text" id="gSenha" placeholder="Ex: silva2025">
+            <div class="campo-dica">O cliente precisa desta senha + link secreto para aceder.</div>
+          </div>
+          <div class="campo">
+            <label>Máx. Selecções (0 = ilimitado)</label>
+            <input type="number" id="gMax" value="0" min="0">
+            <div class="campo-dica">Define o número máximo de fotos seleccionáveis.</div>
+          </div>
+        </div>
+        <div class="linha">
+          <div class="campo">
+            <label>Texto da Marca de Água</label>
+            <input type="text" id="gMa" value="NKELA STUDIOS">
+          </div>
+          <div class="campo">
+            <label>Expiração da Galeria</label>
+            <input type="date" id="gExp">
+            <div class="campo-dica">Em branco = sem expiração.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fc">
+        <div class="fc-sec">Fotografias da Galeria</div>
+        <!-- Upload do PC -->
+        <div class="upload-area" id="galUploadArea">
+          <input type="file" id="galFiles" accept="image/jpeg,image/png,image/webp" multiple onchange="carregarFotosGaleria(this)">
+          <div class="upload-icon">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="3" y="3" width="30" height="30" rx="3" stroke="#C8651A" stroke-width="1.2"/><path d="M18 24V12M12 18l6-6 6 6" stroke="#C8651A" stroke-width="1.2"/><path d="M8 28h20" stroke="#C8651A" stroke-width="1.2"/></svg>
+          </div>
+          <div class="upload-txt">Clique ou arraste as fotos do evento aqui</div>
+          <div class="upload-sub">JPG, PNG, WebP · Pode seleccionar centenas de fotos de uma vez</div>
+        </div>
+        <div class="fotos-preview" id="galPreviewGrid"></div>
+        <div class="progress-wrap" id="galProgress">
+          <div class="progress-bar"><div class="progress-fill" id="galProgressFill" style="width:0%"></div></div>
+          <div class="progress-txt" id="galProgressTxt">A processar fotos...</div>
+        </div>
+        <div class="campo" style="margin-top:1rem;">
+          <label>Ou adicionar URLs (uma por linha) — alternativa ao upload</label>
+          <textarea id="gFotosUrl" rows="4" placeholder="https://drive.google.com/uc?id=XXXX&#10;https://dropbox.com/s/XXXX/foto.jpg?raw=1" oninput="contarFotosUrl()"></textarea>
+          <div class="campo-dica" id="dicaFotos">0 URLs adicionados</div>
+        </div>
+        <div class="info-box">
+          <strong>Fotos do PC:</strong> As fotos são convertidas para Base64 e guardadas localmente no browser. Para produções grandes (100+ fotos), recomenda-se hospedar num servidor e usar URLs.<br>
+          <strong>Links:</strong> Google Drive: substituir <code>/view</code> por <code>/uc?export=view</code> · Dropbox: substituir <code>?dl=0</code> por <code>?raw=1</code>
+        </div>
+      </div>
+
+      <div class="fb" id="criarFb"></div>
+      <div class="acoes">
+        <button class="btn btn-p btn-lg" onclick="criarGaleria()">Criar Galeria e Gerar Link →</button>
+        <button class="btn btn-f" onclick="limparFormGal()">Limpar</button>
+      </div>
+
+      <!-- Resultado -->
+      <div class="resultado" id="resGal">
+        <div class="res-top">✦ Galeria criada com sucesso</div>
+        <div class="res-nome" id="resNome"></div>
+        <div class="res-link-wrap">
+          <div><div class="res-link-lbl">Link secreto do cliente</div><div class="res-link-val" id="resLink"></div></div>
+          <button class="btn btn-s btn-sm" onclick="copiarResLink()">Copiar Link</button>
+        </div>
+        <div class="res-meta">
+          <span>Senha: <strong id="resSenha" style="color:var(--texto)"></strong></span>
+          <span>Fotos: <strong id="resFotos" style="color:var(--texto)"></strong></span>
+        </div>
+        <div class="res-acoes">
+          <button class="btn btn-f btn-sm" onclick="partilharWA()">Enviar por WhatsApp</button>
+          <button class="btn btn-f btn-sm" onclick="partilharMail()">Enviar por Email</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ TODAS AS GALERIAS ══ -->
+    <section class="painel" id="painel-galerias">
+      <div class="p-titulo">Todas as <em>Galerias</em></div>
+      <div class="p-sub">Gerencie e partilhe os links com os seus clientes.</div>
+      <div class="gal-lista" id="galLista"></div>
+    </section>
+
+    <!-- ══ SELECÇÕES ══ -->
+    <section class="painel" id="painel-seleccoes">
+      <div class="p-titulo">Selecções dos <em>Clientes</em></div>
+      <div class="p-sub">Fotos escolhidas pelos clientes para edição. Responda via WhatsApp ou Email.</div>
+      <div class="sel-lista" id="selLista"></div>
+    </section>
+
+    <!-- ══ CONFIGURAÇÕES ══ -->
+    <section class="painel" id="painel-config">
+      <div class="p-titulo">Configurações do <em>Sistema</em></div>
+      <div class="p-sub">Personalize as configurações da plataforma Nkela Studios.</div>
+      <div class="fc">
+        <div class="fc-sec">Contactos do Estúdio</div>
+        <div class="linha">
+          <div class="campo"><label>Email</label><input type="email" id="cfgEmail" placeholder="nvualacanvula@gmail.com"></div>
+          <div class="campo"><label>WhatsApp (com código de país)</label><input type="tel" id="cfgWa" placeholder="244921208655"></div>
+        </div>
+        <div class="fb" id="cfgFb"></div>
+        <button class="btn btn-p" onclick="guardarCfg()">Guardar Configurações</button>
+      </div>
+      <div class="fc" style="margin-top:1rem;">
+        <div class="fc-sec">Alterar Senha de Administrador</div>
+        <div class="linha">
+          <div class="campo"><label>Nova Senha (mín. 6 caracteres)</label><input type="password" id="cfgS1" placeholder="Nova senha..."></div>
+          <div class="campo"><label>Confirmar Nova Senha</label><input type="password" id="cfgS2" placeholder="Confirmar..."></div>
+        </div>
+        <div class="fb" id="senhaFb"></div>
+        <button class="btn btn-s" onclick="alterarSenha()">Alterar Senha</button>
+      </div>
+    </section>
+
+  </main>
+</div><!-- /layout -->
+
+<script>
+'use strict';
+
+/* ── Contactos do estúdio (padrão) ── */
+const WA_PADRAO    = '244921208655';
+const EMAIL_PADRAO = 'nvualacanvula@gmail.com';
+
+/* ── Verificar sessão — redirecionar se não autenticado ── */
+(function(){
+  try{
+    const s=JSON.parse(sessionStorage.getItem('nk_admin_sessao')||'null');
+    if(!s?.auth || (Date.now()-s.inicio)>120*60*1000)
+      window.location.replace('login.html');
+  }catch{window.location.replace('login.html');}
+})();
+
+/* ── Tema ── */
+(function(){try{const t=JSON.parse(localStorage.getItem('nk_tema')||'"escuro"');document.documentElement.dataset.tema=t;}catch{}})();
+function alternarTema(){
+  const t=document.documentElement.dataset.tema==='escuro'?'claro':'escuro';
+  document.documentElement.dataset.tema=t;
+  localStorage.setItem('nk_tema',JSON.stringify(t));
+}
+
+/* ── Storage ── */
+function ler(k,d=null){try{const v=localStorage.getItem('nk_'+k);return v?JSON.parse(v):d;}catch{return d;}}
+function gravar(k,v){try{localStorage.setItem('nk_'+k,JSON.stringify(v));}catch{}}
+
+let portfolio  = ler('portfolio',[]);
+let pacotes    = ler('pacotes',[]);
+let galerias   = ler('galerias',[]);
+let seleccoes  = ler('seleccoes',[]);
+let cfg        = ler('cfg',{email:EMAIL_PADRAO,wa:WA_PADRAO});
+
+/* Fotos em memória durante criação */
+let heroB64       = null;  /* Base64 da foto do hero */
+let portFotosB64  = [];    /* Fotos portfolio do PC */
+let galFotosData  = [];    /* Fotos galeria (Base64 ou URL) */
+
+let _galeriaUltimaCreada = null;
+
+/* ── Utilitários ── */
+function gerarId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function fmtData(ts){if(!ts)return'';return new Date(ts).toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric'});}
+function copiar(txt){try{navigator.clipboard.writeText(txt);}catch{const t=document.createElement('textarea');t.value=txt;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();}}
+function fb(id,tipo,msg,dur=5000){const el=document.getElementById(id);if(!el)return;el.className='fb '+tipo+' vis';el.textContent=msg;if(dur>0)setTimeout(()=>el.classList.remove('vis'),dur);}
+
+function linkGaleria(id){
+  /* Link para acesso do cliente — funciona localmente e num servidor */
+  const b=window.location.href.replace(/\/admin\/painel\.html.*/,'');
+  return`${b}/cliente/acesso.html?id=${id}`;
+}
+
+/* ── Sidebar / Painéis ── */
+function abrirPainel(nome){
+  document.querySelectorAll('.painel').forEach(p=>p.classList.remove('ativo'));
+  document.getElementById('painel-'+nome)?.classList.add('ativo');
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.toggle('ativo',i.dataset.p===nome));
+  const nomes={dashboard:'Dashboard',hero:'Foto Hero',portfolio:'Portfolio',pacotes:'Pacotes',novaGaleria:'Nova Galeria',galerias:'Todas as Galerias',seleccoes:'Selecções',config:'Configurações'};
+  document.getElementById('tbSec').textContent=nomes[nome]||nome;
+  if(nome==='galerias') renderGalerias();
+  if(nome==='seleccoes'){renderSeleccoes();marcarTodasLidas();}
+  if(nome==='dashboard') renderDashboard();
+  if(nome==='config') carregarCfg();
+}
+
+function actualizarSidebar(){
+  const nLidas=seleccoes.filter(s=>!s.lida).length;
+  const sb=document.getElementById('sbSel');
+  sb.textContent=nLidas; sb.style.display=nLidas?'inline-block':'none';
+  document.getElementById('notifPt').style.display=nLidas?'block':'none';
+  document.getElementById('sbGal').textContent=galerias.length||'';
+  document.getElementById('sbPort').textContent=portfolio.length||'';
+  document.getElementById('sbPack').textContent=pacotes.length||'';
+}
+
+/* ── Dashboard ── */
+function renderDashboard(){
+  const totalF=galerias.reduce((a,g)=>a+(g.fotos?.length||0),0);
+  const nLidas=seleccoes.filter(s=>!s.lida).length;
+  document.getElementById('statsGrid').innerHTML=`
+    <div class="stat"><div class="stat-v">${galerias.length}</div><div class="stat-l">Galerias</div></div>
+    <div class="stat"><div class="stat-v">${totalF}</div><div class="stat-l">Fotos em Galerias</div></div>
+    <div class="stat"><div class="stat-v">${seleccoes.length}</div><div class="stat-l">Selecções</div></div>
+    <div class="stat"><div class="stat-v" style="color:${nLidas?'#5bbf88':'var(--marca)'}">${nLidas}</div><div class="stat-l">Pendentes</div></div>`;
+  const el=document.getElementById('dashRecent');
+  if(!seleccoes.length){el.innerHTML='<div class="vazio"><p>Nenhuma selecção recebida ainda.</p></div>';return;}
+  el.innerHTML=[...seleccoes].reverse().slice(0,6).map(s=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.2rem;background:var(--painel);border:1px solid ${!s.lida?'rgba(200,101,26,.3)':'var(--borda2)'};border-radius:2px;margin-bottom:.5rem;flex-wrap:wrap;gap:.5rem;">
+      <div style="display:flex;align-items:center;gap:.8rem;">
+        ${!s.lida?'<span class="ponto-n"></span>':''}
+        <div><div style="font-size:.85rem;color:var(--texto)">${s.nomeCliente}</div><div style="font-size:.72rem;color:var(--muted)">${s.nomeGaleria} · ${fmtData(s.data)}</div></div>
+      </div>
+      <div style="display:flex;gap:.5rem;align-items:center;">
+        <span class="chip chip-o">${s.fotos.length} fotos</span>
+        <button class="btn-sm btn-sm-f" onclick="abrirPainel('seleccoes')">Ver →</button>
+      </div>
+    </div>`).join('');
+}
+
+/* ── HERO — Upload do PC ── */
+function carregarHeroPC(input){
+  const file=input.files[0];
+  if(!file)return;
+  if(file.size>5*1024*1024){fb('heroFb','err','Ficheiro demasiado grande. Máx. 5 MB.');return;}
+  const reader=new FileReader();
+  reader.onload=e=>{
+    heroB64=e.target.result;
+    const prev=document.getElementById('heroPrev');
+    prev.src=heroB64; prev.style.display='block';
+    fb('heroFb','ok','✦ Foto carregada. Clique em "Aplicar ao Site".');
+  };
+  reader.readAsDataURL(file);
+}
+function prevHeroUrl(){
+  const v=document.getElementById('heroUrl').value.trim();
+  const prev=document.getElementById('heroPrev');
+  if(v){prev.src=v;prev.style.display='block';prev.onerror=()=>prev.style.display='none';}
+  else prev.style.display='none';
+}
+function guardarHero(){
+  const urlVal=document.getElementById('heroUrl').value.trim();
+  const fonte=heroB64||urlVal;
+  if(!fonte){fb('heroFb','err','Carregue uma foto ou introduza um URL.');return;}
+  gravar('hero',fonte);
+  fb('heroFb','ok','✦ Foto do hero actualizada com sucesso!');
+}
+function limparHero(){
+  gravar('hero','');
+  heroB64=null;
+  document.getElementById('heroPrev').style.display='none';
+  document.getElementById('heroUrl').value='';
+  fb('heroFb','ok','Foto do hero removida.');
+}
+
+/* ── PORTFOLIO — Upload do PC ── */
+function carregarFotosPC(input){
+  const files=Array.from(input.files);
+  if(!files.length)return;
+  const grid=document.getElementById('portPreviewGrid');
+  const prog=document.getElementById('portProgress');
+  const fill=document.getElementById('portProgressFill');
+  const txt=document.getElementById('portProgressTxt');
+  prog.classList.add('vis'); portFotosB64=[];
+  let done=0;
+  files.forEach((file,i)=>{
+    if(file.size>5*1024*1024)return; /* Ignorar ficheiros > 5MB */
+    const reader=new FileReader();
+    reader.onload=e=>{
+      portFotosB64.push({nome:file.name,b64:e.target.result});
+      done++;
+      fill.style.width=((done/files.length)*100)+'%';
+      txt.textContent=`${done} de ${files.length} fotos processadas...`;
+      if(done===files.length){
+        prog.classList.remove('vis');
+        renderPortPreview();
+        fb('portFb','ok',`✦ ${done} foto${done!==1?'s':''} carregada${done!==1?'s':''}. Preencha as informações e clique em Adicionar.`);
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function renderPortPreview(){
+  const grid=document.getElementById('portPreviewGrid');
+  grid.innerHTML=portFotosB64.map((f,i)=>`
+    <div class="foto-prev">
+      <img src="${f.b64}" alt="${f.nome}">
+      <button class="foto-prev-del" onclick="removerPortPrev(${i})">✕</button>
+      <div class="foto-prev-num">${i+1}</div>
+    </div>`).join('');
+}
+function removerPortPrev(i){
+  portFotosB64.splice(i,1);
+  renderPortPreview();
+}
+function adicionarPortfolio(){
+  const titulo=document.getElementById('pTit').value.trim();
+  const cat=document.getElementById('pCat').value;
+  const videoUrl=document.getElementById('pVideoUrl').value.trim();
+  if(!titulo){fb('portFb','err','Introduza um título.');return;}
+
+  if(videoUrl){
+    /* Adicionar vídeo por URL */
+    portfolio.push({id:gerarId(),titulo,cat,tipo:'video',url:videoUrl});
+    gravar('portfolio',portfolio);
+    document.getElementById('pTit').value='';
+    document.getElementById('pVideoUrl').value='';
+    renderPortLista(); actualizarSidebar();
+    fb('portFb','ok','✦ Vídeo adicionado ao portfolio!');
+
+  } else if(portFotosB64.length){
+    /* Adicionar fotos do PC */
+    portFotosB64.forEach((f,i)=>{
+      const t=portFotosB64.length===1?titulo:`${titulo} (${i+1})`;
+      portfolio.push({id:gerarId(),titulo:t,cat,tipo:'foto',url:f.b64});
+    });
+    gravar('portfolio',portfolio);
+    portFotosB64=[];
+    document.getElementById('portPreviewGrid').innerHTML='';
+    document.getElementById('pTit').value='';
+    renderPortLista(); actualizarSidebar();
+    fb('portFb','ok',`✦ ${portfolio.length} item${portfolio.length!==1?'s':''} adicionado${portfolio.length!==1?'s':''} ao portfolio!`);
+
+  } else {
+    fb('portFb','err','Carregue fotos do computador ou adicione um URL de vídeo.');
+  }
+}
+function removerPort(id){portfolio=portfolio.filter(i=>i.id!==id);gravar('portfolio',portfolio);renderPortLista();actualizarSidebar();}
+function renderPortLista(){
+  const el=document.getElementById('portLista');
+  const ct=document.getElementById('portCont');
+  ct.textContent=portfolio.length?`(${portfolio.length})`:'';
+  if(!portfolio.length){el.innerHTML='<div class="vazio"><p>Sem items ainda.</p></div>';return;}
+  el.innerHTML=portfolio.map(i=>`
+    <div class="item-row">
+      <div class="item-thumb">${i.tipo==='video'?'<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 4l12 6-12 6V4z" fill="#C8651A" opacity=".7"/></svg>':`<img src="${i.url.length>200?i.url.slice(0,200)+'...':i.url}" onerror="this.style.display='none'">`}</div>
+      <div class="item-info"><div class="item-nome">${i.titulo}</div><div class="item-meta">${i.cat} · ${i.tipo}</div></div>
+      <button class="item-del" onclick="removerPort('${i.id}')" title="Remover">✕</button>
+    </div>`).join('');
+}
+
+/* ── PACOTES ── */
+function adicionarPacote(){
+  const nome=document.getElementById('pkNome').value.trim();
+  const preco=document.getElementById('pkPreco').value.trim();
+  if(!nome){fb('pkFb','err','Introduza o nome.');return;}
+  if(!preco){fb('pkFb','err','Introduza o preço.');return;}
+  const itens=document.getElementById('pkItens').value.trim().split('\n').map(s=>s.trim()).filter(Boolean);
+  pacotes.push({id:gerarId(),nome,preco,desc:document.getElementById('pkDesc').value.trim(),periodo:document.getElementById('pkPer').value.trim(),itens,destaque:document.getElementById('pkStar').checked});
+  gravar('pacotes',pacotes);
+  ['pkNome','pkPreco','pkDesc','pkPer','pkItens'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pkStar').checked=false;
+  renderPkLista(); actualizarSidebar();
+  fb('pkFb','ok','✦ Pacote adicionado!');
+}
+function removerPacote(id){pacotes=pacotes.filter(p=>p.id!==id);gravar('pacotes',pacotes);renderPkLista();actualizarSidebar();}
+function toggleStar(id){pacotes=pacotes.map(p=>p.id===id?{...p,destaque:!p.destaque}:p);gravar('pacotes',pacotes);renderPkLista();}
+function renderPkLista(){
+  const el=document.getElementById('pkLista');
+  const ct=document.getElementById('pkCont');
+  ct.textContent=pacotes.length?`(${pacotes.length})`:'';
+  if(!pacotes.length){el.innerHTML='<div class="vazio"><p>Sem pacotes ainda.</p></div>';return;}
+  el.innerHTML=pacotes.map(p=>`
+    <div class="item-row">
+      <div class="item-thumb" style="font-family:var(--fh);font-size:.62rem;color:var(--marca);background:var(--marca-dim);">PKG</div>
+      <div class="item-info"><div class="item-nome">${p.nome}</div><div class="item-meta">${p.preco}${p.periodo?' '+p.periodo:''}</div></div>
+      <button class="item-star ${p.destaque?'on':''}" onclick="toggleStar('${p.id}')" title="Popular">★</button>
+      <button class="item-del" onclick="removerPacote('${p.id}')" title="Remover">✕</button>
+    </div>`).join('');
+}
+
+/* ── NOVA GALERIA — Upload do PC ── */
+function carregarFotosGaleria(input){
+  const files=Array.from(input.files);
+  if(!files.length)return;
+  const prog=document.getElementById('galProgress');
+  const fill=document.getElementById('galProgressFill');
+  const txt=document.getElementById('galProgressTxt');
+  prog.classList.add('vis'); galFotosData=[];
+  let done=0;
+  files.forEach(file=>{
+    if(file.size>5*1024*1024){done++;return;}
+    const reader=new FileReader();
+    reader.onload=e=>{
+      galFotosData.push({tipo:'b64',url:e.target.result,nome:file.name});
+      done++;
+      fill.style.width=((done/files.length)*100)+'%';
+      txt.textContent=`${done} de ${files.length} fotos processadas...`;
+      if(done===files.length){
+        prog.classList.remove('vis');
+        renderGalPreview();
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function renderGalPreview(){
+  const grid=document.getElementById('galPreviewGrid');
+  grid.innerHTML=galFotosData.map((f,i)=>`
+    <div class="foto-prev">
+      <img src="${f.url.length>200?f.url.slice(0,200)+'...':f.url}" alt="${f.nome||'foto'}">
+      <button class="foto-prev-del" onclick="removerGalPrev(${i})">✕</button>
+      <div class="foto-prev-num">${i+1}</div>
+    </div>`).join('');
+}
+function removerGalPrev(i){galFotosData.splice(i,1);renderGalPreview();}
+function contarFotosUrl(){
+  const n=document.getElementById('gFotosUrl').value.trim().split('\n').filter(l=>l.trim()).length;
+  document.getElementById('dicaFotos').textContent=`${n} URL${n!==1?'s':''} adicionado${n!==1?'s':''}`;
+}
+function limparFormGal(){
+  ['gNome','gData','gCliente','gEmail','gDesc','gSenha','gFotosUrl'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('gMax').value='0';
+  document.getElementById('gMa').value='NKELA STUDIOS';
+  document.getElementById('gExp').value='';
+  document.getElementById('galPreviewGrid').innerHTML='';
+  document.getElementById('resGal').style.display='none';
+  document.getElementById('dicaFotos').textContent='0 URLs adicionados';
+  galFotosData=[];
+}
+
+function criarGaleria(){
+  const nome    =document.getElementById('gNome').value.trim();
+  const data    =document.getElementById('gData').value;
+  const cliente =document.getElementById('gCliente').value.trim();
+  const email   =document.getElementById('gEmail').value.trim();
+  const desc    =document.getElementById('gDesc').value.trim();
+  const senha   =document.getElementById('gSenha').value.trim();
+  const max     =parseInt(document.getElementById('gMax').value)||0;
+  const ma      =document.getElementById('gMa').value.trim()||'NKELA STUDIOS';
+  const exp     =document.getElementById('gExp').value;
+
+  /* Fotos: primeiro PC, depois URLs */
+  let fotos=[];
+  if(galFotosData.length){
+    fotos=galFotosData.map(f=>f.url);
+  } else {
+    fotos=document.getElementById('gFotosUrl').value.trim().split('\n').map(l=>l.trim()).filter(Boolean);
+  }
+
+  if(!nome){fb('criarFb','err','Introduza o nome do evento.');return;}
+  if(!cliente){fb('criarFb','err','Introduza o nome do cliente.');return;}
+  if(!senha){fb('criarFb','err','Defina uma senha de acesso para o cliente.');return;}
+  if(!fotos.length){fb('criarFb','err','Adicione pelo menos uma foto.');return;}
+
+  const id=gerarId();
+  const g={id,nome,data,cliente,email,desc,senha,maxSel:max,marcaAgua:ma,fotos,criadaEm:Date.now(),expira:exp?new Date(exp).getTime():null};
+  galerias.push(g);
+  gravar('galerias',galerias);
+  actualizarSidebar();
+  _galeriaUltimaCreada=g;
+
+  const link=linkGaleria(id);
+  document.getElementById('resNome').textContent=nome;
+  document.getElementById('resLink').textContent=link;
+  document.getElementById('resSenha').textContent=senha;
+  document.getElementById('resFotos').textContent=fotos.length+' fotos';
+  document.getElementById('resGal').style.display='block';
+  document.getElementById('resGal').scrollIntoView({behavior:'smooth'});
+  fb('criarFb','ok','✦ Galeria criada! Copie o link e partilhe com o cliente.');
+}
+
+function copiarResLink(){if(_galeriaUltimaCreada)copiar(linkGaleria(_galeriaUltimaCreada.id));}
+
+function partilharWA(){
+  if(!_galeriaUltimaCreada)return;
+  const g=_galeriaUltimaCreada;
+  const link=linkGaleria(g.id);
+  const msg=`Olá ${g.cliente}! 📸\n\nA sua galeria *${g.nome}* está pronta na Nkela Studios.\n\n🔗 *Link:* ${link}\n🔑 *Senha:* ${g.senha}\n\nAceda ao link, veja as suas fotos e seleccione as que quer editadas.\n\n_Nkela Studios_`;
+  const waNum=cfg.wa||WA_PADRAO;
+  window.open(`https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+function partilharMail(){
+  if(!_galeriaUltimaCreada)return;
+  const g=_galeriaUltimaCreada;
+  const link=linkGaleria(g.id);
+  const assunto=`A sua galeria está pronta — ${g.nome} | Nkela Studios`;
+  const corpo=`Olá ${g.cliente},\n\nA sua galeria de fotografias do evento "${g.nome}" está disponível.\n\nLink de acesso: ${link}\nSenha: ${g.senha}\n\nAceda ao link, veja as suas fotos e seleccione as que pretende receber editadas. Envie a sua selecção quando terminar — entraremos em contacto em breve.\n\nCom os melhores cumprimentos,\nNkela Studios\n+244 921 208 655`;
+  const mailDest=g.email||(cfg.email||EMAIL_PADRAO);
+  window.location.href=`mailto:${mailDest}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+}
+
+/* ── TODAS AS GALERIAS ── */
+function renderGalerias(){
+  const el=document.getElementById('galLista');
+  if(!galerias.length){
+    el.innerHTML='<div class="vazio"><svg width="50" height="50" viewBox="0 0 50 50" fill="none"><rect x="4" y="8" width="42" height="34" rx="2" stroke="#C8651A" stroke-width="1.1"/><path d="M4 18h42M16 8v10M34 8v10" stroke="#C8651A" stroke-width="1.1"/></svg><h3>Sem galerias</h3><p>Crie a primeira galeria.<br><span class="lk" onclick="abrirPainel(\'novaGaleria\')">Nova galeria →</span></p></div>';
+    return;
+  }
+  el.innerHTML=[...galerias].reverse().map(g=>{
+    const link=linkGaleria(g.id);
+    const nSel=seleccoes.filter(s=>s.idGaleria===g.id).length;
+    const expirou=g.expira&&Date.now()>g.expira;
+    return`<div class="gal-card">
+      <div>
+        <div class="gal-nome">${g.nome} ${expirou?'<span class="chip chip-r">Expirada</span>':'<span class="chip chip-g">Activa</span>'} <span class="chip chip-m">🔒 ${g.fotos.length} fotos</span></div>
+        <div class="gal-info">
+          <span>Cliente: <strong style="color:var(--texto)">${g.cliente}</strong></span>
+          ${g.email?`<span>${g.email}</span>`:''}
+          <span>Criada: ${fmtData(g.criadaEm)}</span>
+          <span>${nSel} selecç${nSel===1?'ão':'ões'}</span>
+        </div>
+      </div>
+      <div class="gal-acoes">
+        <div class="link-box" id="lb-${g.id}" onclick="copiarLink('${g.id}','${link}')">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="3" y=".8" width="7.5" height="7.5" rx="1" stroke="currentColor" stroke-width="1"/><rect x=".8" y="3" width="7.5" height="7.5" rx="1" stroke="currentColor" stroke-width="1"/></svg>
+          Copiar Link
+        </div>
+        <button class="btn-sm btn-sm-f" onclick="window.open('${link}','_blank')">Pré-ver</button>
+        <button class="btn-sm btn-sm-f" onclick="enviarGalWA('${g.id}')">WhatsApp</button>
+        <button class="btn-sm btn-sm-d" onclick="eliminarGaleria('${g.id}')">Remover</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function copiarLink(id,link){
+  copiar(link);
+  const el=document.getElementById('lb-'+id);
+  el.classList.add('copiado');el.innerHTML='✓ Copiado!';
+  setTimeout(()=>{el.classList.remove('copiado');el.innerHTML='<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="3" y=".8" width="7.5" height="7.5" rx="1" stroke="currentColor" stroke-width="1"/><rect x=".8" y="3" width="7.5" height="7.5" rx="1" stroke="currentColor" stroke-width="1"/></svg> Copiar Link';},2500);
+}
+
+function enviarGalWA(id){
+  const g=galerias.find(x=>x.id===id);if(!g)return;
+  const link=linkGaleria(id);
+  const msg=`Olá ${g.cliente}! 📸\n\nA sua galeria *${g.nome}* está pronta.\n\n🔗 *Link:* ${link}\n🔑 *Senha:* ${g.senha}\n\n_Nkela Studios_`;
+  window.open(`https://wa.me/${cfg.wa||WA_PADRAO}?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+function eliminarGaleria(id){
+  if(!confirm('Eliminar esta galeria permanentemente? As selecções associadas também serão eliminadas.'))return;
+  galerias=galerias.filter(g=>g.id!==id);
+  seleccoes=seleccoes.filter(s=>s.idGaleria!==id);
+  gravar('galerias',galerias);gravar('seleccoes',seleccoes);
+  renderGalerias();renderDashboard();actualizarSidebar();
+}
+
+/* ── SELECÇÕES ── */
+function renderSeleccoes(){
+  const el=document.getElementById('selLista');
+  if(!seleccoes.length){
+    el.innerHTML='<div class="vazio"><svg width="50" height="50" viewBox="0 0 50 50" fill="none"><path d="M5 25l12 12L45 10" stroke="#C8651A" stroke-width="1.2" opacity=".5"/></svg><h3>Sem selecções</h3><p>As selecções dos clientes aparecerão aqui.</p></div>';
+    return;
+  }
+  el.innerHTML=[...seleccoes].reverse().map(s=>`
+    <div class="sel-card ${!s.lida?'nova':''}" id="sc-${s.id}">
+      <div class="sel-head">
+        <div>
+          <div style="display:flex;align-items:center;gap:.5rem;">
+            ${!s.lida?'<span class="ponto-n"></span>':''}
+            <span class="sel-cliente">${s.nomeCliente}</span>
+            <span class="chip chip-o">${s.fotos.length} fotos</span>
+          </div>
+          <div class="sel-info">${s.nomeGaleria} · ${fmtData(s.data)} · ${s.emailCliente||'Sem email'}</div>
+        </div>
+        <div style="display:flex;gap:.45rem;flex-wrap:wrap;align-items:center;">
+          ${!s.lida?`<button class="btn-sm btn-sm-f" onclick="marcarLida('${s.id}')">Marcar lida</button>`:'<span class="chip chip-g">Lida</span>'}
+          <button class="btn-sm btn-sm-d" onclick="eliminarSel('${s.id}')">Remover</button>
+        </div>
+      </div>
+      <div class="sel-fotos-row">
+        ${s.fotos.slice(0,12).map(f=>`<div class="sel-mini"><div class="sel-mini-bg" style="background-image:url('${f.url}')"></div><div class="sel-mini-n">#${f.num}</div></div>`).join('')}
+        ${s.fotos.length>12?`<div class="sel-mais">+${s.fotos.length-12}</div>`:''}
+      </div>
+      <div class="sel-foot">
+        <a class="btn btn-s btn-sm" href="${construirWA(s)}" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn btn-f btn-sm" href="${construirMail(s)}">Email</a>
+        <div class="sel-nums">Fotos: ${s.fotos.map(f=>'#'+f.num).join(', ')}</div>
+      </div>
+    </div>`).join('');
+}
+
+function marcarLida(id){seleccoes=seleccoes.map(s=>s.id===id?{...s,lida:true}:s);gravar('seleccoes',seleccoes);renderSeleccoes();actualizarSidebar();}
+function marcarTodasLidas(){seleccoes=seleccoes.map(s=>({...s,lida:true}));gravar('seleccoes',seleccoes);actualizarSidebar();}
+function eliminarSel(id){if(!confirm('Eliminar esta selecção?'))return;seleccoes=seleccoes.filter(s=>s.id!==id);gravar('seleccoes',seleccoes);renderSeleccoes();renderDashboard();actualizarSidebar();}
+
+function construirWA(s){
+  const lista=s.fotos.map(f=>'  · Foto #'+f.num).join('\n');
+  const msg=`Olá ${s.nomeCliente}! 📸\n\nRecebi a sua selecção de *${s.fotos.length} fotos* da galeria *${s.nomeGaleria}*:\n\n${lista}\n\nVou iniciar a edição em breve! Obrigado.\n\n_Nkela Studios_`;
+  return`https://wa.me/${cfg.wa||WA_PADRAO}?text=${encodeURIComponent(msg)}`;
+}
+function construirMail(s){
+  const lista=s.fotos.map(f=>`Foto #${f.num}`).join(', ');
+  const assunto=`Selecção recebida: ${s.nomeGaleria} — ${s.nomeCliente}`;
+  const corpo=`Nova selecção recebida!\n\nCliente: ${s.nomeCliente}\nEmail: ${s.emailCliente||'—'}\nGaleria: ${s.nomeGaleria}\nTotal: ${s.fotos.length} fotos\n\nFotos seleccionadas: ${lista}\n\n---\nNkela Studios`;
+  return`mailto:${cfg.email||EMAIL_PADRAO}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+}
+
+/* ── CONFIGURAÇÕES ── */
+function carregarCfg(){
+  document.getElementById('cfgEmail').value=cfg.email||EMAIL_PADRAO;
+  document.getElementById('cfgWa').value=cfg.wa||WA_PADRAO;
+}
+function guardarCfg(){
+  cfg.email=document.getElementById('cfgEmail').value.trim()||EMAIL_PADRAO;
+  cfg.wa=document.getElementById('cfgWa').value.trim()||WA_PADRAO;
+  gravar('cfg',cfg);fb('cfgFb','ok','Configurações guardadas com sucesso.');
+}
+function alterarSenha(){
+  const s1=document.getElementById('cfgS1').value;
+  const s2=document.getElementById('cfgS2').value;
+  if(!s1){fb('senhaFb','err','Introduza a nova senha.');return;}
+  if(s1.length<6){fb('senhaFb','err','A senha deve ter pelo menos 6 caracteres.');return;}
+  if(s1!==s2){fb('senhaFb','err','As senhas não coincidem.');return;}
+  gravar('senha_admin',s1);
+  document.getElementById('cfgS1').value='';
+  document.getElementById('cfgS2').value='';
+  fb('senhaFb','ok','Senha alterada com sucesso.');
+}
+
+/* ── Drag & Drop nas áreas de upload ── */
+['heroUploadArea','portUploadArea','galUploadArea'].forEach(areaId=>{
+  const area=document.getElementById(areaId);
+  if(!area)return;
+  area.addEventListener('dragover',e=>{e.preventDefault();area.classList.add('drag');});
+  area.addEventListener('dragleave',()=>area.classList.remove('drag'));
+  area.addEventListener('drop',e=>{e.preventDefault();area.classList.remove('drag');});
+});
+
+/* ── Sair ── */
+function sair(){sessionStorage.removeItem('nk_admin_sessao');window.location.replace('login.html');}
+
+/* ── Init ── */
+renderDashboard();
+renderPortLista();
+renderPkLista();
+actualizarSidebar();
+const hUrl=ler('hero','');if(hUrl){document.getElementById('heroUrl').value=typeof hUrl==='string'&&hUrl.startsWith('data:')?'(foto carregada do PC)':hUrl;}
+</script>
+</body>
+</html>

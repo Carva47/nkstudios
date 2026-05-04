@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-AO" data-tema="escuro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Nkela Studios · Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+:root,[data-tema="escuro"]{
+  --fundo:#0D0804;--sup:#141008;--painel:#1C140A;
+  --marca:#C8651A;--marca2:#E07A30;--marca-dim:rgba(200,101,26,.12);
+  --texto:#F5E6D3;--muted:#7A6050;
+  --borda:rgba(200,101,26,.22);--borda2:rgba(255,255,255,.07);
+  --fh:'Cormorant Garamond',serif;--fb:'Raleway',sans-serif;
+}
+[data-tema="claro"]{
+  --fundo:#FAF4EE;--sup:#F2E8DA;--painel:#EAD8C4;
+  --marca:#B85A14;--marca2:#D06E28;--marca-dim:rgba(184,90,20,.1);
+  --texto:#1A0E06;--muted:#7A5A3A;
+  --borda:rgba(184,90,20,.25);--borda2:rgba(0,0,0,.1);
+}
+body{background:var(--fundo);color:var(--texto);font-family:var(--fb);font-weight:300;display:flex;min-height:100vh;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:rgba(200,101,26,.3);border-radius:2px;}
+
+/* Painel esquerdo */
+.lado-marca{flex:1;background:linear-gradient(160deg,#120A04 0%,#1C1008 50%,#0D0804 100%);display:flex;flex-direction:column;justify-content:space-between;padding:3.5rem;position:relative;overflow:hidden;}
+[data-tema="claro"] .lado-marca{background:linear-gradient(160deg,#EAD8C4 0%,#DEC8AC 50%,#FAF4EE 100%);}
+.lado-marca::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M0 60L60 0M-10 10L10-10M50 70L70 50' stroke='rgba(200,101,26,0.07)' stroke-width='1'/%3E%3C/svg%3E") repeat;pointer-events:none;}
+.lm-logo{position:relative;}
+.lm-nome{font-family:var(--fh);font-size:2.2rem;letter-spacing:4px;font-weight:300;color:var(--texto);}
+.lm-nome em{color:var(--marca);font-style:normal;}
+.lm-sub-logo{font-size:.58rem;letter-spacing:4px;text-transform:uppercase;color:var(--muted);margin-top:.15rem;}
+.lm-meio{position:relative;}
+.lm-titulo{font-family:var(--fh);font-size:2.8rem;font-weight:300;line-height:1.15;color:var(--texto);}
+.lm-titulo em{color:var(--marca);font-style:italic;display:block;}
+.lm-desc{font-size:.82rem;color:var(--muted);line-height:1.85;margin-top:.9rem;max-width:340px;}
+.lm-lista{list-style:none;margin-top:1.8rem;display:flex;flex-direction:column;gap:.65rem;}
+.lm-lista li{font-size:.78rem;color:var(--muted);display:flex;align-items:center;gap:.7rem;}
+.lm-lista li::before{content:'';width:18px;height:1px;background:var(--marca);flex-shrink:0;}
+.lm-rodape{font-size:.68rem;color:var(--muted);letter-spacing:1px;position:relative;}
+
+/* Painel direito */
+.lado-form{width:420px;flex-shrink:0;background:var(--sup);display:flex;align-items:center;justify-content:center;padding:3rem;position:relative;}
+.tema-topo{position:absolute;top:1.2rem;right:1.2rem;}
+.tema-btn{width:36px;height:36px;background:var(--marca-dim);border:1px solid var(--borda);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--marca);cursor:pointer;transition:all .25s;}
+.tema-btn:hover{background:var(--marca);color:#fff;}
+.icone-sol{display:none;}[data-tema="claro"] .icone-sol{display:block;}[data-tema="claro"] .icone-lua{display:none;}
+.form-inner{width:100%;}
+.lock-ic{width:46px;height:46px;border:1px solid var(--borda);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;color:var(--marca);}
+.f-titulo{font-family:var(--fh);font-size:1.8rem;font-weight:300;margin-bottom:.3rem;color:var(--texto);}
+.f-sub{font-size:.78rem;color:var(--muted);margin-bottom:2rem;line-height:1.65;}
+.f-label{display:block;font-size:.63rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.42rem;}
+.f-inp{width:100%;background:rgba(200,101,26,.05);border:1px solid var(--borda2);color:var(--texto);padding:.75rem 1rem;font-family:var(--fb);font-size:.88rem;font-weight:300;outline:none;border-radius:2px;transition:all .25s;margin-bottom:1.2rem;}
+.f-inp:focus{border-color:var(--marca);background:rgba(200,101,26,.08);}
+/* Barra de tentativas */
+.barra-tent{height:3px;background:var(--borda2);border-radius:2px;margin-bottom:1rem;display:none;overflow:hidden;}
+.barra-tent.vis{display:block;}
+.barra-prog{height:100%;background:var(--marca);border-radius:2px;transition:width .3s,background .3s;}
+/* Erro */
+.caixa-erro{background:rgba(185,64,64,.1);border:1px solid rgba(185,64,64,.3);color:#e08080;padding:.65rem 1rem;font-size:.77rem;border-radius:2px;display:none;margin-bottom:1rem;line-height:1.5;}
+.caixa-erro.vis{display:block;}
+/* Botão */
+.btn-entrar{width:100%;background:var(--marca);border:none;color:#fff;padding:.88rem;font-family:var(--fb);font-size:.75rem;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;border-radius:2px;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:background .25s;}
+.btn-entrar:hover{background:var(--marca2);}
+.btn-entrar:disabled{opacity:.45;cursor:not-allowed;}
+.link-voltar{text-align:center;margin-top:1.2rem;}
+.link-voltar a{font-size:.72rem;color:var(--muted);display:inline-flex;align-items:center;gap:.35rem;text-decoration:none;transition:color .25s;}
+.link-voltar a:hover{color:var(--marca);}
+.dica{text-align:center;font-size:.67rem;color:var(--muted);margin-top:1.1rem;}
+.dica code{color:var(--marca);background:var(--marca-dim);padding:.1rem .35rem;border-radius:2px;}
+
+@media(max-width:780px){.lado-marca{display:none;}.lado-form{width:100%;}}
+</style>
+</head>
+<body>
+
+<!-- Branding esquerdo -->
+<div class="lado-marca" aria-hidden="true">
+  <div class="lm-logo">
+    <div class="lm-nome"><em>N</em>kela</div>
+    <div class="lm-sub-logo">Studios · Painel Admin</div>
+  </div>
+  <div class="lm-meio">
+    <div class="lm-titulo">Gestão de<br>galerias<br><em>privadas</em></div>
+    <p class="lm-desc">Plataforma exclusiva da Nkela Studios para criação e gestão de galerias com total segurança e controlo.</p>
+    <ul class="lm-lista">
+      <li>Galerias protegidas por link secreto e senha</li>
+      <li>Upload de fotos directamente do seu computador</li>
+      <li>Marca de água automática em todas as fotografias</li>
+      <li>Protecção anti-download em múltiplas camadas</li>
+      <li>Notificações via WhatsApp e Email automáticos</li>
+    </ul>
+  </div>
+  <div class="lm-rodape">© 2025 Nkela Studios · Luanda, Angola</div>
+</div>
+
+<!-- Formulário de login -->
+<main class="lado-form">
+  <div class="tema-topo">
+    <button class="tema-btn" onclick="alternarTema()" aria-label="Alternar modo">
+      <svg class="icone-lua" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M12.5 9.5A5.5 5.5 0 016 2.5a6 6 0 100 10.5 5.5 5.5 0 006.5-3.5z" stroke="currentColor" stroke-width="1.3"/></svg>
+      <svg class="icone-sol" width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M7.5 1v2M7.5 12v2M1 7.5h2M12 7.5h2M2.9 2.9l1.4 1.4M10.7 10.7l1.4 1.4M2.9 12.1l1.4-1.4M10.7 4.3l1.4-1.4" stroke="currentColor" stroke-width="1.3"/></svg>
+    </button>
+  </div>
+  <div class="form-inner">
+    <div class="lock-ic">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <rect x="3" y="9" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
+        <path d="M6 9V6a4 4 0 018 0v3" stroke="currentColor" stroke-width="1.3"/>
+        <circle cx="10" cy="14" r="1.5" fill="currentColor"/>
+      </svg>
+    </div>
+    <h1 class="f-titulo">Acesso Restrito</h1>
+    <p class="f-sub">Painel exclusivo para administradores da Nkela Studios. Introduza as suas credenciais para continuar.</p>
+
+    <div class="barra-tent" id="barraTent">
+      <div class="barra-prog" id="barraProg" style="width:100%"></div>
+    </div>
+    <div class="caixa-erro" id="caixaErro" role="alert" aria-live="assertive"></div>
+
+    <label class="f-label" for="campoSenha">Senha de Administrador</label>
+    <input type="password" id="campoSenha" class="f-inp" placeholder="••••••••"
+      autofocus autocomplete="current-password"
+      onkeydown="if(event.key==='Enter')fazerLogin()">
+
+    <button class="btn-entrar" id="btnEntrar" onclick="fazerLogin()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2"/></svg>
+      Entrar no Painel
+    </button>
+
+    <div class="link-voltar">
+      <a href="../index.html">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.2"/></svg>
+        Voltar ao site
+      </a>
+    </div>
+    <div class="dica">Senha padrão: <code>nkela2025</code></div>
+  </div>
+</main>
+
+<script>
+'use strict';
+
+/* ── Tema ── */
+(function(){
+  try{const t=JSON.parse(localStorage.getItem('nk_tema')||'"escuro"');document.documentElement.dataset.tema=t;}catch{}
+})();
+function alternarTema(){
+  const t=document.documentElement.dataset.tema==='escuro'?'claro':'escuro';
+  document.documentElement.dataset.tema=t;
+  localStorage.setItem('nk_tema',JSON.stringify(t));
+}
+
+/* ── Segurança ── */
+const MAX_TENT   = 5;
+const BLOQUEIO_S = 60;
+let tentativas   = 0;
+let bloqueadoAte = 0;
+
+function lerSenha(){
+  try{return JSON.parse(localStorage.getItem('nk_senha_admin')||'"nkela2025"');}
+  catch{return 'nkela2025';}
+}
+
+/* Redirecionar se já tem sessão válida */
+(function verificarSessao(){
+  try{
+    const s=JSON.parse(sessionStorage.getItem('nk_admin_sessao')||'null');
+    if(s?.auth===true && (Date.now()-s.inicio) < 120*60*1000)
+      window.location.replace('painel.html');
+  }catch{}
+})();
+
+function mostrarErro(txt){
+  const el=document.getElementById('caixaErro');
+  el.textContent=txt; el.classList.add('vis');
+}
+function esconderErro(){
+  document.getElementById('caixaErro').classList.remove('vis');
+}
+
+function fazerLogin(){
+  /* Verificar bloqueio */
+  if(Date.now()<bloqueadoAte){
+    const seg=Math.ceil((bloqueadoAte-Date.now())/1000);
+    mostrarErro(`Conta bloqueada. Aguarde ${seg} segundo${seg!==1?'s':''}.`);
+    return;
+  }
+
+  const entrada=document.getElementById('campoSenha').value;
+  if(!entrada){mostrarErro('Introduza a senha.');return;}
+
+  if(entrada===lerSenha()){
+    /* ✅ Login bem-sucedido — criar sessão */
+    esconderErro();
+    tentativas=0;
+    sessionStorage.setItem('nk_admin_sessao', JSON.stringify({
+      auth: true,
+      inicio: Date.now()
+    }));
+    window.location.replace('painel.html');
+
+  } else {
+    /* ❌ Senha errada */
+    tentativas++;
+    document.getElementById('campoSenha').value='';
+    document.getElementById('campoSenha').focus();
+
+    const restantes = MAX_TENT - tentativas;
+    const barra     = document.getElementById('barraTent');
+    const prog      = document.getElementById('barraProg');
+    barra.classList.add('vis');
+    prog.style.width = ((restantes/MAX_TENT)*100)+'%';
+    prog.style.background = restantes<=1?'#b94040':restantes<=2?'#d06020':'var(--marca)';
+
+    if(tentativas>=MAX_TENT){
+      bloqueadoAte=Date.now()+BLOQUEIO_S*1000;
+      document.getElementById('btnEntrar').disabled=true;
+      /* Contagem decrescente */
+      let seg=BLOQUEIO_S;
+      mostrarErro(`Demasiadas tentativas. Bloqueado por ${seg}s.`);
+      const int=setInterval(()=>{
+        seg--;
+        if(seg<=0){
+          clearInterval(int);
+          tentativas=0;
+          document.getElementById('btnEntrar').disabled=false;
+          barra.classList.remove('vis');
+          esconderErro();
+        } else {
+          mostrarErro(`Demasiadas tentativas. Bloqueado por ${seg}s.`);
+        }
+      },1000);
+    } else {
+      mostrarErro(`Senha incorrecta. ${restantes} tentativa${restantes!==1?'s':''} restante${restantes!==1?'s':''}.`);
+    }
+  }
+}
+</script>
+</body>
+</html>
