@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-AO" data-tema="escuro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Nkela Studios · Acesso à Galeria</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+:root,[data-tema="escuro"]{
+  --fundo:#0D0804;--sup:#141008;--painel:#1C140A;
+  --marca:#C8651A;--marca2:#E07A30;--marca-dim:rgba(200,101,26,.12);
+  --texto:#F5E6D3;--muted:#7A6050;
+  --borda:rgba(200,101,26,.22);--borda2:rgba(255,255,255,.07);
+  --fh:'Cormorant Garamond',serif;--fb:'Raleway',sans-serif;
+}
+[data-tema="claro"]{
+  --fundo:#FAF4EE;--sup:#F2E8DA;--painel:#EAD8C4;
+  --marca:#B85A14;--marca2:#D06E28;--marca-dim:rgba(184,90,20,.1);
+  --texto:#1A0E06;--muted:#7A5A3A;
+  --borda:rgba(184,90,20,.25);--borda2:rgba(0,0,0,.1);
+}
+body{background:var(--fundo);color:var(--texto);font-family:var(--fb);font-weight:300;min-height:100vh;display:flex;align-items:center;justify-content:center;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;padding:2rem;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:rgba(200,101,26,.3);border-radius:2px;}
+
+/* Tema toggle */
+.tema-btn{position:fixed;top:1.2rem;right:1.2rem;width:36px;height:36px;background:var(--marca-dim);border:1px solid var(--borda);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--marca);cursor:pointer;transition:all .25s;z-index:10;}
+.tema-btn:hover{background:var(--marca);color:#fff;}
+.icone-sol{display:none;}[data-tema="claro"] .icone-sol{display:block;}[data-tema="claro"] .icone-lua{display:none;}
+
+/* Wrapper central */
+.wrap{width:100%;max-width:440px;}
+
+/* Logo */
+.logo-bloco{text-align:center;margin-bottom:2.5rem;}
+.logo-nome{font-family:var(--fh);font-size:2rem;letter-spacing:4px;font-weight:300;color:var(--texto);}
+.logo-nome em{color:var(--marca);font-style:normal;}
+.logo-sub{font-size:.55rem;letter-spacing:4px;text-transform:uppercase;color:var(--muted);margin-top:.2rem;}
+
+/* Card */
+.card{background:var(--painel);border:1px solid var(--borda);border-radius:3px;padding:2.5rem;}
+.card-icone{width:52px;height:52px;border:1px solid var(--borda);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;color:var(--marca);}
+.card-evento{font-family:var(--fh);font-size:1.55rem;font-weight:300;text-align:center;margin-bottom:.3rem;color:var(--texto);}
+.card-cliente{font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:1.5rem;}
+.divisor{height:1px;background:var(--borda2);margin:1.2rem 0;}
+
+/* Formulário */
+.f-label{display:block;font-size:.63rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.42rem;}
+.f-inp{width:100%;background:rgba(200,101,26,.05);border:1px solid var(--borda2);color:var(--texto);padding:.75rem 1rem;font-family:var(--fb);font-size:.88rem;font-weight:300;outline:none;border-radius:2px;transition:all .25s;margin-bottom:1.2rem;}
+.f-inp:focus{border-color:var(--marca);background:rgba(200,101,26,.08);}
+.btn-entrar{width:100%;background:var(--marca);border:none;color:#fff;padding:.88rem;font-family:var(--fb);font-size:.75rem;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;border-radius:2px;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:background .25s;}
+.btn-entrar:hover{background:var(--marca2);}
+.btn-entrar:disabled{opacity:.45;cursor:not-allowed;}
+.erro{background:rgba(185,64,64,.1);border:1px solid rgba(185,64,64,.3);color:#e08080;padding:.65rem 1rem;font-size:.77rem;border-radius:2px;display:none;margin-bottom:1rem;line-height:1.5;}
+.erro.vis{display:block;}
+.card-rodape{text-align:center;font-size:.7rem;color:var(--muted);margin-top:1.2rem;line-height:1.7;}
+.card-rodape strong{color:var(--texto);}
+
+/* Barra tentativas */
+.barra-t{height:3px;background:var(--borda2);border-radius:2px;margin-bottom:1rem;display:none;overflow:hidden;}
+.barra-t.vis{display:block;}
+.barra-p{height:100%;background:var(--marca);border-radius:2px;transition:width .3s,background .3s;}
+
+/* Estado de erro — galeria não encontrada */
+.nao-encontrada{display:none;text-align:center;}
+.nao-encontrada .ni{font-size:3rem;color:var(--muted);margin-bottom:1rem;opacity:.4;}
+.nao-encontrada h2{font-family:var(--fh);font-size:1.6rem;font-weight:300;margin-bottom:.5rem;color:var(--texto);}
+.nao-encontrada p{font-size:.82rem;color:var(--muted);line-height:1.7;margin-bottom:1.5rem;}
+.link-site{display:inline-flex;align-items:center;gap:.4rem;font-size:.72rem;color:var(--muted);border:1px solid var(--borda2);padding:.5rem 1.1rem;border-radius:2px;transition:all .25s;text-decoration:none;}
+.link-site:hover{border-color:var(--marca);color:var(--marca);}
+
+/* Carregando */
+.carregando{text-align:center;padding:2rem;}
+.spin{width:32px;height:32px;border:2px solid var(--borda2);border-top-color:var(--marca);border-radius:50%;animation:girar .8s linear infinite;margin:0 auto 1rem;}
+@keyframes girar{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<!-- Toggle tema -->
+<button class="tema-btn" onclick="alternarTema()" aria-label="Alternar modo">
+  <svg class="icone-lua" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M12.5 9.5A5.5 5.5 0 016 2.5a6 6 0 100 10.5 5.5 5.5 0 006.5-3.5z" stroke="currentColor" stroke-width="1.3"/></svg>
+  <svg class="icone-sol" width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M7.5 1v2M7.5 12v2M1 7.5h2M12 7.5h2M2.9 2.9l1.4 1.4M10.7 10.7l1.4 1.4M2.9 12.1l1.4-1.4M10.7 4.3l1.4-1.4" stroke="currentColor" stroke-width="1.3"/></svg>
+</button>
+
+<div class="wrap">
+
+  <!-- Logo -->
+  <div class="logo-bloco">
+    <div class="logo-nome"><em>N</em>kela</div>
+    <div class="logo-sub">Studios · Galeria Privada</div>
+  </div>
+
+  <!-- Card de carregamento inicial -->
+  <div class="card" id="cardCarregando">
+    <div class="carregando">
+      <div class="spin"></div>
+      <p style="font-size:.82rem;color:var(--muted);">A carregar galeria...</p>
+    </div>
+  </div>
+
+  <!-- Card de acesso -->
+  <div class="card" id="cardAcesso" style="display:none;">
+    <div class="card-icone">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="11" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.3"/>
+        <path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="1.3"/>
+        <circle cx="12" cy="17.5" r="2" fill="currentColor"/>
+      </svg>
+    </div>
+    <h1 class="card-evento" id="cardEvento">—</h1>
+    <p class="card-cliente" id="cardCliente"></p>
+    <div class="divisor"></div>
+
+    <div class="barra-t" id="barraTent"><div class="barra-p" id="barraP" style="width:100%"></div></div>
+    <div class="erro" id="erroBox" role="alert"></div>
+
+    <label class="f-label" for="campoSenha">Senha de Acesso</label>
+    <input type="password" id="campoSenha" class="f-inp"
+      placeholder="Introduza a sua senha" autofocus autocomplete="current-password"
+      onkeydown="if(event.key==='Enter')verificarAcesso()">
+
+    <button class="btn-entrar" id="btnAcesso" onclick="verificarAcesso()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2"/></svg>
+      Aceder à Galeria
+    </button>
+
+    <p class="card-rodape">
+      Este acesso é <strong>pessoal e intransferível</strong>.<br>
+      As fotografias estão protegidas e não podem ser descarregadas.
+    </p>
+  </div>
+
+  <!-- Galeria não encontrada -->
+  <div class="card" id="cardErro" style="display:none;">
+    <div class="nao-encontrada" style="display:block;">
+      <div class="ni">🔍</div>
+      <h2>Galeria não encontrada</h2>
+      <p>O link pode estar incorrecto, a galeria foi removida ou expirou. Contacte a Nkela Studios para assistência.</p>
+      <a class="link-site" href="../index.html">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.2"/></svg>
+        Voltar ao site
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+'use strict';
+
+/* ── Tema ── */
+(function(){try{const t=JSON.parse(localStorage.getItem('nk_tema')||'"escuro"');document.documentElement.dataset.tema=t;}catch{}})();
+function alternarTema(){
+  const t=document.documentElement.dataset.tema==='escuro'?'claro':'escuro';
+  document.documentElement.dataset.tema=t;
+  localStorage.setItem('nk_tema',JSON.stringify(t));
+}
+
+/* ── Storage ── */
+function ler(k,d=null){try{const v=localStorage.getItem('nk_'+k);return v?JSON.parse(v):d;}catch{return d;}}
+
+/* ── Variáveis ── */
+let galeriaActual = null;
+const MAX_TENT    = 5;
+const BLOQUEIO_S  = 60;
+let tentativas    = 0;
+let bloqueadoAte  = 0;
+
+/* ── Obter ID da URL ── */
+function obterParam(nome){
+  return new URLSearchParams(window.location.search).get(nome);
+}
+
+/* ── Carregar galeria ── */
+function iniciar(){
+  const id = obterParam('id');
+
+  if(!id){
+    mostrarErroGaleria();
+    return;
+  }
+
+  /* Verificar se já tem sessão válida para esta galeria */
+  try{
+    const s=JSON.parse(sessionStorage.getItem('nk_cliente_sessao')||'null');
+    if(s?.idGaleria===id && s?.autorizado===true){
+      /* Sessão válida — redirecionar directamente para a galeria */
+      window.location.replace('galeria.html?id='+id);
+      return;
+    }
+  }catch{}
+
+  /* Procurar galeria */
+  const galerias = ler('galerias',[]);
+  const galeria  = galerias.find(g=>g.id===id);
+
+  /* Esconder carregamento */
+  document.getElementById('cardCarregando').style.display='none';
+
+  if(!galeria){
+    mostrarErroGaleria();
+    return;
+  }
+
+  /* Verificar expiração */
+  if(galeria.expira && Date.now()>galeria.expira){
+    mostrarErroGaleria('A galeria expirou. Contacte a Nkela Studios.');
+    return;
+  }
+
+  /* Mostrar formulário */
+  galeriaActual = galeria;
+  document.getElementById('cardEvento').textContent  = galeria.nome;
+  document.getElementById('cardCliente').textContent = galeria.cliente ? 'Para: '+galeria.cliente : '';
+  document.title = 'Nkela Studios · '+galeria.nome;
+  document.getElementById('cardAcesso').style.display='block';
+}
+
+/* ── Verificar senha ── */
+function verificarAcesso(){
+  if(!galeriaActual)return;
+
+  /* Verificar bloqueio */
+  if(Date.now()<bloqueadoAte){
+    const seg=Math.ceil((bloqueadoAte-Date.now())/1000);
+    mostrarErro(`Bloqueado. Aguarde ${seg}s.`);
+    return;
+  }
+
+  const entrada = document.getElementById('campoSenha').value;
+  if(!entrada){mostrarErro('Introduza a senha.');return;}
+
+  if(entrada===galeriaActual.senha){
+    /* ✅ Correcto — criar sessão do cliente */
+    sessionStorage.setItem('nk_cliente_sessao', JSON.stringify({
+      autorizado: true,
+      idGaleria:  galeriaActual.id,
+      inicio:     Date.now()
+    }));
+    /* Redirecionar para a galeria */
+    window.location.replace('galeria.html?id='+galeriaActual.id);
+
+  } else {
+    /* ❌ Senha errada */
+    tentativas++;
+    document.getElementById('campoSenha').value='';
+    document.getElementById('campoSenha').focus();
+
+    const restantes = MAX_TENT - tentativas;
+    const barra     = document.getElementById('barraTent');
+    const prog      = document.getElementById('barraP');
+    barra.classList.add('vis');
+    prog.style.width = ((restantes/MAX_TENT)*100)+'%';
+    prog.style.background = restantes<=1?'#b94040':restantes<=2?'#d06020':'var(--marca)';
+
+    if(tentativas>=MAX_TENT){
+      bloqueadoAte = Date.now()+BLOQUEIO_S*1000;
+      document.getElementById('btnAcesso').disabled=true;
+      let seg=BLOQUEIO_S;
+      mostrarErro(`Demasiadas tentativas. Bloqueado por ${seg}s.`);
+      const int=setInterval(()=>{
+        seg--;
+        if(seg<=0){
+          clearInterval(int);tentativas=0;
+          document.getElementById('btnAcesso').disabled=false;
+          barra.classList.remove('vis');
+          esconderErro();
+        }else{
+          mostrarErro(`Demasiadas tentativas. Aguarde ${seg}s.`);
+        }
+      },1000);
+    }else{
+      mostrarErro(`Senha incorrecta. ${restantes} tentativa${restantes!==1?'s':''} restante${restantes!==1?'s':''}.`);
+    }
+  }
+}
+
+function mostrarErro(txt){const el=document.getElementById('erroBox');el.textContent=txt;el.classList.add('vis');}
+function esconderErro(){document.getElementById('erroBox').classList.remove('vis');}
+function mostrarErroGaleria(msg){
+  document.getElementById('cardCarregando').style.display='none';
+  document.getElementById('cardAcesso').style.display='none';
+  const card=document.getElementById('cardErro');
+  card.style.display='block';
+  if(msg){const p=card.querySelector('p');if(p)p.textContent=msg;}
+}
+
+/* Iniciar ao carregar */
+window.addEventListener('DOMContentLoaded',iniciar);
+</script>
+</body>
+</html>
